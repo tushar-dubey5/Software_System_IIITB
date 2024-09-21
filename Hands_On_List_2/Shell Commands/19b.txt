@@ -1,0 +1,16 @@
+/*
+============================================================================
+Name : 19b.txt
+Author : Tushar Dubey
+Description : Create a FIFO file by
+b. mkfifo command
+Date: 19th Sept, 2024.
+============================================================================
+*/
+mkfifo testFile2
+ls -l
+/*
+OUTPUT
+============================================================================
+prw-rw-r-- 1 tushar tushar     0 Sep 21 13:21  testFile2
+*/

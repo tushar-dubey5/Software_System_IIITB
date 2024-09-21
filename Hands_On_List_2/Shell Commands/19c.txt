@@ -1,0 +1,11 @@
+/*
+============================================================================
+Name : 19c.txt
+Author : Tushar Dubey
+Description : Create a FIFO file by
+c. use strace command to find out, which command (mknod or mkfifo) is better.
+Date: 19th Sept, 2024.
+============================================================================
+*/
+strace mknod myfifo_mknod p
+strace mkfifo myfifo_mkfifo
