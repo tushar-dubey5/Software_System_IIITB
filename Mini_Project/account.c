@@ -6,9 +6,9 @@
 #include <sys/file.h>
 #include <errno.h>
 #include <pthread.h>
-#include "account.h"
+#include "./Include/account.h"
 
-#define ACCOUNTS_FILE "accounts.dat"
+#define ACCOUNTS_FILE "./Database/accounts.dat"
 
 static Account accounts[MAX_ACCOUNTS];
 static int account_count = 0;
@@ -266,67 +266,7 @@ bool transfer_between_accounts(int from_account_id, int to_account_id, double am
     pthread_mutex_unlock(&account_mutex);
     return true;
 }
-// bool transfer_between_accounts(int from_account_id, int to_account_id, double amount) {
-//     pthread_mutex_lock(&account_mutex);
 
-//     Account* from_account = find_account_by_id(from_account_id);
-//     Account* to_account = find_account_by_id(to_account_id);
-
-//     if (from_account == NULL || to_account == NULL || from_account->balance < amount) {
-//         fprintf(stderr, "Error: Transfer failed between accounts %d and %d (insufficient balance or account not found).\n",
-//                 from_account_id, to_account_id);
-//         pthread_mutex_unlock(&account_mutex);
-//         return false;
-//     }
-
-//     from_account->balance -= amount;
-//     to_account->balance += amount;
-
-//     int fd = open(ACCOUNTS_FILE, O_RDWR, 0644);
-//     if (fd == -1) {
-//         perror("Error opening accounts file");
-//         pthread_mutex_unlock(&account_mutex);
-//         return false;
-//     }
-
-//     if (flock(fd, LOCK_EX) == -1) {
-//         perror("Error locking accounts file");
-//         close(fd);
-//         pthread_mutex_unlock(&account_mutex);
-//         return false;
-//     }
-
-//     // Write the updated "from" account
-//     off_t offset_from = (from_account->id - 1) * sizeof(Account);
-//     if (pwrite(fd, from_account, sizeof(Account), offset_from) == -1) {
-//         perror("Error writing to accounts file (from account)");
-//         flock(fd, LOCK_UN);
-//         close(fd);
-//         pthread_mutex_unlock(&account_mutex);
-//         return false;
-//     }
-
-//     // Write the updated "to" account
-//     off_t offset_to = (to_account->id - 1) * sizeof(Account);
-//     if (pwrite(fd, to_account, sizeof(Account), offset_to) == -1) {
-//         perror("Error writing to accounts file (to account)");
-//         flock(fd, LOCK_UN);
-//         close(fd);
-//         pthread_mutex_unlock(&account_mutex);
-//         return false;
-//     }
-
-//     // Ensure data is flushed to disk
-//     if (fsync(fd) == -1) {
-//         perror("Error syncing accounts file");
-//     }
-
-//     flock(fd, LOCK_UN);
-//     close(fd);
-
-//     pthread_mutex_unlock(&account_mutex);
-//     return true;
-// }
 void close_account_system() {
     pthread_mutex_lock(&account_mutex);
 

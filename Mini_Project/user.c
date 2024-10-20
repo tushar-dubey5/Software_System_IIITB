@@ -6,11 +6,11 @@
 #include <string.h>
 #include <sys/file.h>
 #include <openssl/evp.h>
-#include "user.h"
-#include "account.h"
+#include "./Include/user.h"
+#include "./Include/account.h"
 
-#define USERS_FILE "users.dat"
-#define LOGGED_IN_USERS_FILE "logged_in_users.dat"
+#define USERS_FILE "./Database/users.dat"
+#define LOGGED_IN_USERS_FILE "./Database/logged_in_users.dat"
 #define MAX_USERS 1000
 #define MAX_HASHED_PASSWORD_LENGTH 65
 
@@ -90,7 +90,6 @@ bool initialize_user_system() {
             strncpy(users[user_count].password, password, MAX_PASSWORD_LENGTH - 1);
             users[user_count].password[MAX_PASSWORD_LENGTH - 1] = '\0';
             users[user_count].role = (UserRole)role;
-            // users[user_count].logged_in = (bool)logged_in;
             users[user_count].id = user_count + 1;
             user_count++;
             printf("Loaded user: %s (role: %d)\n", username, role);
@@ -133,8 +132,6 @@ User *create_user(const char *username, const char *password, UserRole role) {
     new_user->username[MAX_USERNAME_LENGTH - 1] = '\0';
     hash_password(password, new_user->password);
     new_user->role = role;
-    // new_user->logged_in = false;
-
     user_count++;
 
     save_users();
@@ -211,43 +208,6 @@ int update_user(User* user) {
     fclose(file);
     return 1;
 }
-
-
-// bool update_user_password(int user_id, const char* new_password) {
-//     User* user = find_user_by_id(user_id);
-//     if (user == NULL) {
-//         return false;
-//     }
-
-//     hash_password(new_password, user->password);
-
-//     int fd = open(USERS_FILE, O_RDWR, 0644);
-//     if (fd == -1) {
-//         perror("Error opening users file");
-//         return false;
-//     }
-
-//     if (flock(fd, LOCK_EX) == -1) {
-//         perror("Error locking users file");
-//         close(fd);
-//         return false;
-//     }
-
-//     if (pwrite(fd, users, sizeof(User) * user_count, 0) == -1){
-//         perror("Error writing to users file");
-//         flock(fd, LOCK_UN);
-//         close(fd);
-//         return false;
-//     }
-
-//     if (fsync(fd) == -1) {
-//         perror("Error syncing users file");
-//     }
-
-//     flock(fd, LOCK_UN);
-//     close(fd);
-//     return true;
-// }
 
 bool update_user_password(int user_id, const char* new_password) {
     User* user = find_user_by_id(user_id);

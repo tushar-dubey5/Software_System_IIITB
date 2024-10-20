@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "employee.h"
-#include "transaction.h"
-#include "account.h"
-#include "loan.h"
-#include "user.h"
-#include "customer.h"
+#include "./Include/employee.h"
+#include "./Include/transaction.h"
+#include "./Include/account.h"
+#include "./Include/loan.h"
+#include "./Include/user.h"
+#include "./Include/customer.h"
 #include <sys/socket.h>
 #include <ctype.h>
-#include "logout.h"
+#include "./Include/logout.h"
 
 #define BUFFER_SIZE 1024
 

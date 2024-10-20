@@ -3,13 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "admin.h"
-#include "user.h"
-#include "account.h"
-#include "customer.h"
+#include "./Include/admin.h"
+#include "./Include/user.h"
+#include "./Include/account.h"
+#include "./Include/customer.h"
 #include <sys/socket.h>
 #include <ctype.h>
-#include "logout.h"
+#include "./Include/logout.h"
 
 #define BUFFER_SIZE 1024
 

@@ -6,9 +6,9 @@
 #include <sys/file.h>
 #include <errno.h>
 #include <pthread.h>
-#include "transaction.h"
+#include "./Include/transaction.h"
 
-#define TRANSACTIONS_FILE "transactions.dat"
+#define TRANSACTIONS_FILE "./Database/transactions.dat"
 
 static Transaction transactions[MAX_TRANSACTIONS];
 static int transaction_count = 0;

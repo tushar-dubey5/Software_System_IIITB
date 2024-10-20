@@ -8,15 +8,15 @@
 #include <errno.h>
 #include <signal.h>
 #include <ctype.h>
-#include "user.h"
-#include "account.h"
-#include "transaction.h"
-#include "loan.h"
-#include "customer.h"
-#include "manager.h"
-#include "employee.h"
-#include "admin.h"
-#include "logout.h"
+#include "./Include/user.h"
+#include "./Include/account.h"
+#include "./Include/transaction.h"
+#include "./Include/loan.h"
+#include "./Include/customer.h"
+#include "./Include/manager.h"
+#include "./Include/employee.h"
+#include "./Include/admin.h"
+#include "./Include/logout.h"
 
 #define PORT 8080
 #define MAX_CLIENTS 10
@@ -162,7 +162,7 @@ void *handle_client(void *data) {
     int socket_desc = client->socket;
     char buffer[BUFFER_SIZE] = {0};
     
-    send_message(socket_desc, "Welcome to the Banking Management System\n");
+    send_message(socket_desc, "Welcome to Your Bank\n Who are you let us know, please enter your Username and Password\n");
 
     User *user = handle_login(socket_desc);
     
@@ -227,15 +227,15 @@ User *handle_login(int socket) {
     User *user = NULL;
 
     while (1) {
-        send_message(socket, "Username: ");
+        send_message(socket, "Enter Username: ");
         receive_message(socket, username);
 
         if (is_user_logged_in(username)) {
-            send_message(socket, "You are already logged in from another session.\n");
+            send_message(socket, "Oops! seems like you have already logged in, please LOGOUT from there to LOGIN again\n");
             continue;
         }
         
-        send_message(socket, "Password: ");
+        send_message(socket, "Enter Password: ");
         receive_message(socket, password);
 
         lock_file_operations();
@@ -251,11 +251,8 @@ User *handle_login(int socket) {
      
     if (user != NULL) {
         char welcome_msg[BUFFER_SIZE];
-        snprintf(welcome_msg, BUFFER_SIZE, "Welcome, %s! You are logged in as %s.\n",
-                username,
-                user->role == CUSTOMER ? "Customer" : 
-                user->role == EMPLOYEE ? "Employee" :
-                user->role == MANAGER ? "Manager" : "Administrator");
+        snprintf(welcome_msg, BUFFER_SIZE, "Welcome, %s!\n",
+                username);
         send_message(socket, welcome_msg);
 
         if (!add_logged_in_user(username)) {
@@ -267,29 +264,3 @@ User *handle_login(int socket) {
     return user;
 }
 
-// void handle_logout(int socket, User *user) {
-//     if (user == NULL) {
-//         send_message(socket, "No user is currently logged in.\n");
-//         return;
-//     }
-    
-//     switch (user->role) {
-//         case CUSTOMER:
-//             logout_customer(user);
-//             break;
-//         case EMPLOYEE:
-//             logout_employee(user);
-//             break;
-//         case MANAGER:
-//             logout_manager(user);
-//             break;
-//         case ADMIN:
-//             logout_admin(user);
-//             break;
-//         default:
-//             send_message(socket, "Invalid user role.\n");
-//             break;
-//     }
-
-//     send_message(socket, "You have successfully logged out.\n");
-// }

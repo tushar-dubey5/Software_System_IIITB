@@ -5,14 +5,16 @@
 #include <fcntl.h>
 #include <sys/file.h>
 #include <sys/socket.h>
-#include "customer.h"
-#include "transaction.h"
-#include "loan.h"
-#include "user.h"
+#include "./Include/customer.h"
+#include "./Include/transaction.h"
+#include "./Include/loan.h"
+#include "./Include/user.h"
 #include <ctype.h>
-#include "feedback.h"
-#include "logout.h"
+#include "./Include/feedback.h"
+#include "./Include/logout.h"
 
+#define ACCOUNT_INACTIVE "Your account is inactive, please contact our employee for further assistance!\n"
+#define INVALID_ENTRY "Invalid entry, please make a valid entry!\n"
 #define BUFFER_SIZE 1024
 
 static void send_message(int socket, const char *message);
@@ -87,7 +89,7 @@ void view_account_balance(int user_id, int socket)
 
     if (account->is_active != 1)
     {
-        send_message(socket, "Error: Your account is currently inactive. Contact support for assistance.\n");
+        send_message(socket,ACCOUNT_INACTIVE);
         return;
     }
 
@@ -106,8 +108,7 @@ void deposit_money(int user_id, int socket)
     }
     if (account->is_active != 1)
     {
-        send_message(socket, "Error: Your account is currently inactive. Contact support for assistance.\n");
-        return;
+        send_message(socket,ACCOUNT_INACTIVE);
     }
     char buffer[BUFFER_SIZE];
     double amount;
@@ -148,7 +149,7 @@ void withdraw_money(int user_id, int socket)
     }
     if (account->is_active != 1)
     {
-        send_message(socket, "Error: Your account is currently inactive. Contact support for assistance.\n");
+        send_message(socket,ACCOUNT_INACTIVE);
         return;
     }
     char buffer[BUFFER_SIZE];
@@ -196,8 +197,8 @@ void transfer_funds(int user_id, int socket)
     }
     if (from_account->is_active != 1)
     {
-        send_message(socket, "Error: Your account is currently inactive. Contact support for assistance.\n");
-        return;
+        send_message(socket,ACCOUNT_INACTIVE);
+
     }
     char buffer[BUFFER_SIZE];
     int to_account_id;
@@ -287,8 +288,7 @@ void view_transaction_history(int user_id, int socket)
     }
     if (account->is_active != 1)
     {
-        send_message(socket, "Error: Your account is currently inactive. Contact support for assistance.\n");
-        return;
+        send_message(socket, ACCOUNT_INACTIVE);
     }
 
     Transaction *transactions;
@@ -354,7 +354,7 @@ void handle_customer_menu(int user_id, int socket)
 
     while (1)
     {
-        send_message(socket, "\nCustomer Menu:\n"
+        send_message(socket, "\nHere is the Customer Menu for you:\n"
                              "1. View Account Balance\n"
                              "2. Deposit Money\n"
                              "3. Withdraw Money\n"
@@ -422,29 +422,3 @@ static void receive_message(int socket, char *buffer)
     }
 }
 
-// static void send_message(int socket, const char* message) {
-//     size_t len = strlen(message);
-//     ssize_t sent = send(socket, message, len, 0);
-//     if (sent == -1) {
-//         perror("Error sending message");
-//     } else {
-//         printf("Sent message: %s", message); // Debug
-//     }
-// }
-
-// static void receive_message(int socket, char* buffer) {
-//     memset(buffer, 0, BUFFER_SIZE);
-//     ssize_t valread = recv(socket, buffer, BUFFER_SIZE - 1, 0);
-//     if (valread > 0) {
-//         buffer[valread] = '\0';
-//         char* newline = strchr(buffer, '\n');
-//         if (newline) *newline = '\0';
-//         char* carriage_return = strchr(buffer, '\r');
-//         if (carriage_return) *carriage_return = '\0';
-//         printf("Received message: %s\n", buffer); // Debug
-//     } else if (valread == 0) {
-//         fprintf(stderr, "Client disconnected\n");
-//     } else {
-//         perror("Error receiving message");
-//     }
-// }

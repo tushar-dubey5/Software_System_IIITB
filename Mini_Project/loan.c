@@ -6,10 +6,10 @@
 #include <sys/file.h>
 #include <errno.h>
 #include <pthread.h>
-#include "loan.h"
-#include "user.h"
+#include "./Include/loan.h"
+#include "./Include/user.h"
 
-#define LOANS_FILE "loans.dat"
+#define LOANS_FILE "./Database/loans.dat"
 
 static Loan loans[MAX_LOANS];
 static int loan_count = 0;
